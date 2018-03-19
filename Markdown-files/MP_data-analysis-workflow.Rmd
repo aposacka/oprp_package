@@ -1,0 +1,120 @@
+---
+title: "CORI microplastic data analysis workflow"
+author: "Ania"
+date: "January 23, 2018"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Hello! 
+
+> ####Familiarize yourself with the dataset of the CORI lab
+####Naming conventions, important:
+
+* no typos [but we will check]
+* as short as possible & meaningful [for plotting we can change]
+* no spaces, and best to seperate with *_* , for e.g. filter_blank
+  
+  
+  
+  
+> ####Variables in the input data sheet, their meaning and what are they used for
+
+* **project** [char] | enter your porject ID
+* **site** [char] | enter here your site ID
+* **flag** [int] | enter a numeric (1,2,3,...) that means something to you
+* **sample** [char] | combo of numbers and letters, e.g. M1 (mussel 1)
+* **date_extracted** | [ddmmyy], for folks who do digestions
+* **date_inspected** | [ddmmyy], hmm?
+* **photo_number** | numeric (1,2,3) or ID?
+* **proc_blank** | not sure if this is for a seperate spreadsheet to be joined
+* **bckg_blank** | not sure if this is for a seperate spreadsheet to be joined
+* **mp_number** | a particle you suspect is microplastic that you count on the filter. This is SUSPECTED microplastic
+* **mp_color** | describes the color of your MP [blue, red, pink, organge]
+* **mp_type** | fiber, sheet, particle - EVERYONE MUST USE CONSISTENT NAMES!
+* **short_axis** | in microns, microplastic bit width
+* **long_axis** | in microns, microlastic length
+* **FTIR_conf** | binary : Y or N [NOTE this must be capitalized!], if you choose Y - your suspected MP is actual MP as confirmed by the FITR, if ou choose N - your suspected MP is NOT and MP
+* **MP_material** | [character] polyester, nylon etc - EVERYONE MUST USE CONSISTENT NAMES!
+
+
+> ####Variables in the output data sheet #1 (csv called "Total_mp-per-sample ") and their meaning:
+  
+* **total_mp_number** [int] | this is the sum of **mp_number** per sample; total of the suspected MPs
+* **corr_mp_number** [int] | this is a sum of your MPs per sample once they have been confirmed with FTIR. To obtain this, samples that have Y in the **FTIR_conf** column are filtered and summarized (in other words we exclude particles that are NOT microplastics)
+*
+
+> ####Variables in the output data sheet # 2 (csv called "Percent_mp-type-per-sample") and their meaning:
+
+* table contains sample ID and % 
+
+> ####Steps:
+
+1. Subtract the blank - assess background & procedural blank: how to?
+2. Summarize total microplastic per sample + report
+3. Remove particles that are not microplastics -> summarize -> report
+4. How do people want to have TYPE, COLOR and MATERIAL reported? / visualized?
+
+
+> Preliminary processing
+
+##### Taking a look at a mock dataset from Julie
+
+```{r, message=FALSE}
+
+library(tidyverse)
+mp_data <- read.csv("R_coding/Microplastics_data-workflow-OPRP/MP_demo-dataset.csv")
+
+glimpse(mp_data)
+#knitr::kable(head(mp_data), format = "html")
+
+```
+
+### Summarizing total microplastics (includes suspected). The first command generates a table, which can be written to csv. ** If you put the whole command in bracket it will print
+
+```{r, message=FALSE}
+
+(summary <- mp_data %>%
+  group_by(site,sample) %>% # this means: calculate a sum for every station and every sample
+  summarize(sum(mp_number))) # function that does the sum
+
+# write.csv( summary, "Total_suspected-microplastics.csv") - this is your saved data
+
+```
+
+we can implement the above commands into a plot - this is good when exploring things
+
+```{r, message=FALSE}
+
+mp_data %>%
+  group_by(site,sample) %>% # this means: calculate a sum for every station and every sample
+  summarize(mp_susp = sum(mp_number)) %>% 
+  ggplot(aes(site, mp_susp, fill = site))+
+  geom_bar(stat = "identity")# function that does the sum
+
+# write.csv( summary, "Total_suspected-microplastics.csv") - this is your saved data
+
+```
+> 
+
+#### Per each site and sample let's make them plots (yoda)
+```{r, message=FALSE}
+
+mp_data %>%
+  group_by(site,sample) %>% # this means: calculate a sum for every station and every sample
+  summarize(mp_susp = sum(mp_number)) %>% 
+  ggplot(aes(sample, mp_susp, fill = site))+
+  geom_bar(stat = "identity") +
+  facet_grid (~ site)
+
+```
+
+> 
+
+#### What is the distribution of MP type in each sample### Let's see what type of MP we have in each sample
+
+
+
