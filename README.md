@@ -2,7 +2,9 @@
 
 This repo is where we have fun putting together a package with common R functions used in data analysis and viz in microplastic research @ Coastal Ocean Research Institute
 
-![Here's an image](https://pbs.twimg.com/profile_images/917892030889541632/tRZG86JV_400x400.jpg)
+Developing a theme for our plots
+
+![Here's an example based on color scheme of Vancouver Aquarium](https://github.com/aposacka/oprp_package/blob/master/Examples/VanAqua_theme-example.png)
 
 
 Theme inspirations:
