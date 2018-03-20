@@ -4,7 +4,7 @@ This repo is where we have fun putting together a package with common R function
 
 Developing a theme for our plots
 
-![Here's an example based on color scheme of Vancouver Aquarium](https://github.com/aposacka/oprp_package/blob/master/Examples/VanAqua_theme-example.png)
+![Here's an example based on color scheme of Vancouver Aquarium](https://github.com/aposacka/oprp_package/blob/master/Examples/Webp.net-resizeimage.png)
 
 
 Theme inspirations:
